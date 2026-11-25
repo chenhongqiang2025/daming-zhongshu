@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大明中枢 · 帝王六部厂卫官制 | Imperial Council</title>
+<meta name="description" content="全球顶级黑金设计 · 古代帝王权力中枢 · 六部与东厂西厂 · 可视化官制管理平台">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<style>
+/* ================= 设计系统 · 帝王黑金 ================= */
+:root{
+  --bg:#0a0806;
+  --bg-2:#120e09;
+  --panel:rgba(24,18,11,.72);
+  --panel-border:rgba(212,175,55,.28);
+  --gold:#d4af37;
+  --gold-bright:#f6d976;
+  --gold-deep:#8a6d1f;
+  --crimson:#a31621;
+  --crimson-bright:#e23c48;
+  --ink:#e9dcc3;
+  --ink-dim:#a89877;
+  --shadow:0 18px 60px rgba(0,0,0,.55);
+  --glow:0 0 24px rgba(212,175,55,.35);
+  --serif:"Noto Serif SC","STSong","SimSun",serif;
+  --brush:"Ma Shan Zheng","ZCOOL XiaoWei","Noto Serif SC",serif;
+}
+body.light{
+  --bg:#f4ead4;
+  --bg-2:#efe2c4;
+  --panel:rgba(255,251,240,.85);
+  --panel-border:rgba(138,109,31,.4);
+  --ink:#2b2013;
+  --ink-dim:#6d5c3c;
+  --shadow:0 18px 50px rgba(90,66,20,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--serif);
+  overflow-x:hidden;
+  transition:background .6s,color .6s;
+}
+::selection{background:var(--gold);color:#100c05}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg-2)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold-deep),var(--gold));border-radius:6px}
+
+/* ============ 装饰层 ============ */
+#goldCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.85}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%,transparent 55%,rgba(0,0,0,.55) 100%)}
+body.light .vignette{background:radial-gradient(ellipse at 50% 30%,transparent 60%,rgba(120,90,30,.15) 100%)}
+main{position:relative;z-index:2}
+
+/* ============ 顶部导航 ============ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 5vw;
+  background:rgba(10,8,6,.55);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(212,175,55,.22);
+}
+body.light nav{background:rgba(244,234,212,.6)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .seal{
+  width:42px;height:42px;border-radius:8px;
+  background:linear-gradient(145deg,#a31621,#5e0a11);
+  border:1px solid var(--gold);
+  display:grid;place-items:center;
+  font-family:var(--brush);font-size:22px;color:var(--gold-bright);
+  box-shadow:var(--glow);
+  animation:sealPulse 3.5s ease-in-out infinite;
+}
+@keyframes sealPulse{0%,100%{box-shadow:0 0 10px rgba(212,175,55,.25)}50%{box-shadow:0 0 30px rgba(212,175,55,.6)}}
+.brand h1{font-size:19px;letter-spacing:4px;font-weight:700;color:var(--gold-bright)}
+.brand small{display:block;font-size:10px;letter-spacing:3px;color:var(--ink-dim);font-weight:400}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{
+  color:var(--ink-dim);text-decoration:none;font-size:14px;letter-spacing:2px;
+  padding:6px 2px;border-bottom:2px solid transparent;transition:.3s;
+}
+.nav-links a:hover{color:var(--gold-bright);border-bottom-color:var(--gold)}
+.ver-badge{
+  font-size:11px;color:var(--gold);border:1px solid var(--panel-border);
+  padding:3px 10px;border-radius:20px;letter-spacing:1px;
+}
+.theme-btn{
+  background:none;border:1px solid var(--panel-border);color:var(--gold);
+  width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;
+  transition:.3s;
+}
+.theme-btn:hover{box-shadow:var(--glow);transform:rotate(20deg)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ============ 首屏 ============ */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 6vw 80px;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:-1;
+  background:url('https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d899b0924d08.jpg') center/cover no-repeat;
+  filter:saturate(1.05);
+  animation:heroBreath 14s ease-in-out infinite;
+}
+@keyframes heroBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,8,6,.82) 0%,rgba(10,8,6,.6) 45%,var(--bg) 100%);
+}
+body.light .hero-bg::after{background:linear-gradient(180deg,rgba(244,234,212,.85),rgba(244,234,212,.65) 45%,var(--bg))}
+.hero-eyebrow{
+  font-size:14px;letter-spacing:10px;color:var(--gold);text-indent:10px;
+  animation:fadeUp 1s .1s both;
+}
+.hero-title{
+  font-family:var(--brush);
+  font-size:clamp(52px,9vw,118px);line-height:1.15;margin:18px 0 8px;
+  background:linear-gradient(180deg,#fbe7a9 0%,#d4af37 45%,#8a6d1f 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 24px rgba(212,175,55,.4));
+  animation:fadeUp 1s .25s both;
+}
+.hero-sub{
+  font-size:clamp(15px,2vw,20px);letter-spacing:6px;color:var(--ink-dim);
+  animation:fadeUp 1s .4s both;
+}
+.hero-divider{
+  width:280px;height:26px;margin:26px auto 34px;opacity:.9;
+  animation:fadeUp 1s .5s both;
+}
+.hero-ctas{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;animation:fadeUp 1s .65s both}
+.btn{
+  padding:14px 34px;font-size:15px;letter-spacing:3px;cursor:pointer;
+  font-family:var(--serif);text-decoration:none;transition:.35s;border-radius:4px;
+}
+.btn-gold{
+  color:#140f05;border:1px solid var(--gold);
+  background:linear-gradient(135deg,#f6d976,#d4af37 55%,#a8842a);
+  box-shadow:0 8px 30px rgba(212,175,55,.35);
+}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(212,175,55,.55)}
+.btn-ghost{color:var(--gold-bright);border:1px solid var(--panel-border);background:rgba(212,175,55,.06)}
+.btn-ghost:hover{background:rgba(212,175,55,.16);transform:translateY(-3px)}
+.hero-stats{
+  display:flex;gap:0;margin-top:64px;animation:fadeUp 1s .8s both;
+  border:1px solid var(--panel-border);border-radius:10px;overflow:hidden;
+  background:var(--panel);backdrop-filter:blur(8px);
+}
+.hstat{padding:18px 40px;text-align:center;border-right:1px solid rgba(212,175,55,.15)}
+.hstat:last-child{border-right:none}
+.hstat b{display:block;font-size:30px;color:var(--gold-bright);font-weight:700}
+.hstat span{font-size:12px;letter-spacing:3px;color:var(--ink-dim)}
+@media(max-width:640px){.hstat{padding:14px 18px}.hstat b{font-size:22px}}
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  color:var(--ink-dim);font-size:12px;letter-spacing:4px;animation:hintFloat 2.2s ease-in-out infinite;
+}
+@keyframes hintFloat{0%,100%{transform:translate(-50%,0);opacity:.5}50%{transform:translate(-50%,-10px);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+
+/* ============ 通用节区 ============ */
+section{padding:110px 6vw 60px;max-width:1380px;margin:0 auto}
+.sec-head{text-align:center;margin-bottom:60px}
+.sec-head .eyebrow{font-size:13px;letter-spacing:8px;color:var(--crimson-bright);text-indent:8px}
+.sec-head h2{
+  font-family:var(--brush);font-size:clamp(34px,5vw,54px);margin:12px 0 10px;
+  background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.sec-head p{color:var(--ink-dim);letter-spacing:2px;font-size:15px;max-width:640px;margin:0 auto;line-height:1.9}
+.reveal{opacity:0;transform:translateY(46px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ 权力架构 ============ */
+.org-tree{display:flex;flex-direction:column;align-items:center}
+.emperor-node{
+  position:relative;width:min(560px,92%);padding:36px 30px 30px;text-align:center;
+  border:1px solid var(--gold);border-radius:14px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(212,175,55,.14),transparent 60%),
+    url('https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/69cc8be9e6a3.png') center/cover,
+    linear-gradient(160deg,#171006,#0c0904);
+  background-blend-mode:overlay;
+  box-shadow:0 0 50px rgba(212,175,55,.28),inset 0 0 60px rgba(0,0,0,.5);
+}
+body.light .emperor-node{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(212,175,55,.2),transparent 60%),
+    url('https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/69cc8be9e6a3.png') center/cover,
+    linear-gradient(160deg,#fff7e2,#f2e4c0);
+  background-blend-mode:soft-light;
+}
+.emperor-node::before,.emperor-node::after{
+  content:'';position:absolute;left:14px;right:14px;height:8px;
+  border-top:2px solid var(--gold);border-bottom:1px solid rgba(212,175,55,.5);
+}
+.emperor-node::before{top:8px}
+.emperor-node::after{bottom:8px}
+.crown-rings{position:relative;width:120px;height:120px;margin:0 auto 14px}
+.crown-rings svg{position:absolute;inset:0}
+.ring{transform-origin:center;animation:spin 14s linear infinite}
+.ring.rev{animation-direction:reverse;animation-duration:20s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.emperor-node h3{font-family:var(--brush);font-size:44px;color:var(--gold-bright);letter-spacing:8px}
+.emperor-node .era{font-size:13px;letter-spacing:5px;color:var(--ink-dim);margin-top:6px}
+.emperor-node .motto{
+  margin-top:14px;font-size:14px;line-height:2;color:var(--ink);letter-spacing:2px;
+  border-top:1px dashed rgba(212,175,55,.4);padding-top:12px;
+}
+.trunk{width:2px;height:56px;background:linear-gradient(180deg,var(--gold),rgba(212,175,55,.15))}
+.bus{height:2px;width:min(1080px,94%);background:linear-gradient(90deg,transparent,var(--gold) 15%,var(--gold) 85%,transparent)}
+.branches{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;width:100%;margin-top:-1px}
+.branch{
+  position:relative;padding:26px 20px 22px;border-radius:12px;cursor:pointer;
+  background:var(--panel);backdrop-filter:blur(8px);
+  border:1px solid var(--panel-border);
+  transition:transform .35s,box-shadow .35s,border-color .35s;
+  overflow:hidden;
+}
+.branch::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:.7;
+}
+.branch:hover{transform:translateY(-8px);border-color:var(--gold);box-shadow:var(--shadow),var(--glow)}
+.branch .glyph{
+  width:58px;height:58px;margin:0 auto 12px;border-radius:12px;
+  display:grid;place-items:center;
+  font-family:var(--brush);font-size:30px;color:#140f05;
+  background:linear-gradient(145deg,#f6d976,#c39b2c);
+  box-shadow:0 6px 18px rgba(212,175,55,.35);
+}
+.branch h4{font-size:20px;letter-spacing:4px;color:var(--gold-bright);text-align:center}
+.branch .en{display:block;text-align:center;font-size:10px;letter-spacing:3px;color:var(--ink-dim);margin:4px 0 10px}
+.branch p{font-size:13px;line-height:1.9;color:var(--ink-dim);text-align:center;min-height:48px}
+.branch .foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px dashed rgba(212,175,55,.25)}
+.branch .count{font-size:12px;color:var(--ink-dim)}
+.branch .count b{color:var(--gold-bright);font-size:16px}
+.branch .more{font-size:12px;color:var(--gold);letter-spacing:2px}
+.branch.depot{border-color:rgba(163,22,33,.55)}
+.branch.depot::before{background:linear-gradient(90deg,transparent,var(--crimson-bright),transparent)}
+.branch.depot .glyph{
+  color:var(--gold-bright);
+  background:linear-gradient(145deg,#e23c48,#6d0d14);
+  box-shadow:0 6px 18px rgba(163,22,33,.45);
+  animation:depotEye 2.8s ease-in-out infinite;
+}
+@keyframes depotEye{0%,100%{box-shadow:0 6px 18px rgba(163,22,33,.35)}50%{box-shadow:0 6px 30px rgba(226,60,72,.75)}}
+.branch.depot h4{color:var(--crimson-bright)}
+.branch.depot:hover{border-color:var(--crimson-bright);box-shadow:var(--shadow),0 0 26px rgba(226,60,72,.4)}
+
+/* ============ 中枢数据看板 ============ */
+.board{
+  border:1px solid var(--panel-border);border-radius:16px;
+  background:var(--panel);backdrop-filter:blur(10px);box-shadow:var(--shadow);
+  padding:34px 30px;
+}
+.board h3{font-size:18px;letter-spacing:4px;color:var(--gold-bright);margin-bottom:26px;text-align:center}
+.bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px 28px}
+.bar-item{cursor:pointer}
+.bar-item .bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
+.bar-item .bar-label b{color:var(--gold-bright)}
+.bar-track{height:12px;border-radius:8px;background:rgba(212,175,55,.1);overflow:hidden;border:1px solid rgba(212,175,55,.18)}
+.bar-fill{
+  height:100%;width:0;border-radius:8px;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright));
+  box-shadow:0 0 12px rgba(212,175,55,.5);
+  transition:width 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.bar-item.depot .bar-fill{background:linear-gradient(90deg,#6d0d14,var(--crimson-bright));box-shadow:0 0 12px rgba(226,60,72,.5)}
+.bar-item.depot .bar-label b{color:var(--crimson-bright)}
+
+/* ============ 名册工具栏 ============ */
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:26px 0 18px;
+}
+.toolbar input[type=text],.toolbar select,.toolbar input[type=number]{
+  background:rgba(212,175,55,.06);border:1px solid var(--panel-border);
+  color:var(--ink);padding:10px 14px;border-radius:6px;font-family:var(--serif);
+  font-size:14px;outline:none;transition:.3s;
+}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--gold);box-shadow:var(--glow)}
+.toolbar .search{flex:1;min-width:200px}
+.toolbar .btn-mini{
+  padding:10px 18px;font-size:13px;letter-spacing:2px;border-radius:6px;cursor:pointer;
+  border:1px solid var(--panel-border);background:rgba(212,175,55,.08);color:var(--gold-bright);
+  font-family:var(--serif);transition:.3s;
+}
+.toolbar .btn-mini:hover{background:rgba(212,175,55,.2);transform:translateY(-2px)}
+.btn-mini.primary{background:linear-gradient(135deg,#f6d976,#c39b2c);color:#140f05;border-color:var(--gold);font-weight:700}
+.btn-mini.danger{border-color:rgba(226,60,72,.5);color:var(--crimson-bright);background:rgba(163,22,33,.1)}
+.btn-mini.danger:hover{background:rgba(163,22,33,.3)}
+
+/* ============ 名册表格 ============ */
+.table-wrap{
+  border:1px solid var(--panel-border);border-radius:12px;overflow:auto;
+  background:var(--panel);backdrop-filter:blur(8px);box-shadow:var(--shadow);
+}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead th{
+  padding:16px 14px;font-size:13px;letter-spacing:3px;color:var(--gold);
+  text-align:left;border-bottom:1px solid var(--panel-border);
+  background:rgba(212,175,55,.07);cursor:pointer;user-select:none;white-space:nowrap;
+}
+thead th:hover{color:var(--gold-bright)}
+thead th .arrow{font-size:10px;margin-left:4px;opacity:.8}
+tbody td{padding:14px;font-size:14px;border-bottom:1px solid rgba(212,175,55,.1);color:var(--ink)}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:rgba(212,175,55,.06)}
+tbody tr.fading{opacity:0;transform:translateX(20px);transition:.4s}
+.td-name{font-weight:700;color:var(--gold-bright);letter-spacing:1px}
+.td-depot .td-name{color:var(--crimson-bright)}
+.tag{
+  display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;letter-spacing:1px;border:1px solid;
+}
+.tag.on{color:#7fce8a;border-color:rgba(127,206,138,.4);background:rgba(127,206,138,.08)}
+.tag.off{color:#c9b47b;border-color:rgba(201,180,123,.4);background:rgba(201,180,123,.08)}
+.tag.bad{color:var(--crimson-bright);border-color:rgba(226,60,72,.4);background:rgba(226,60,72,.08)}
+.dept-chip{font-size:12px;letter-spacing:1px;color:var(--ink-dim)}
+.merit-bar{display:inline-block;width:64px;height:7px;border-radius:4px;background:rgba(212,175,55,.12);vertical-align:middle;margin-right:8px;overflow:hidden}
+.merit-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright));border-radius:4px}
+.act-btns{display:flex;gap:8px}
+.act-btns button{
+  padding:5px 12px;font-size:12px;border-radius:5px;cursor:pointer;
+  border:1px solid var(--panel-border);background:none;color:var(--gold);font-family:var(--serif);transition:.25s;
+}
+.act-btns button:hover{background:rgba(212,175,55,.15)}
+.act-btns .del{color:var(--crimson-bright);border-color:rgba(226,60,72,.4)}
+.act-btns .del:hover{background:rgba(226,60,72,.15)}
+.empty-row td{text-align:center;padding:44px;color:var(--ink-dim);letter-spacing:3px}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font-size:13px;color:var(--ink-dim)}
+.pager button{
+  padding:7px 16px;margin-left:8px;border:1px solid var(--panel-border);background:none;
+  color:var(--gold);border-radius:6px;cursor:pointer;font-family:var(--serif);
+}
+.pager button:disabled{opacity:.35;cursor:not-allowed}
+.pager button:not(:disabled):hover{background:rgba(212,175,55,.12)}
+
+/* ============ 弹窗 ============ */
+.overlay{
+  position:fixed;inset:0;z-index:200;background:rgba(4,3,2,.75);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.overlay.open{display:flex;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  width:min(560px,100%);max-height:88vh;overflow:auto;border-radius:14px;
+  background:linear-gradient(165deg,#191207,#0e0a05);
+  border:1px solid var(--gold);box-shadow:0 30px 80px rgba(0,0,0,.7),var(--glow);
+  animation:modalUp .35s cubic-bezier(.2,.9,.3,1.2);
+}
+body.light .modal{background:linear-gradient(165deg,#fffaef,#f4e8cd);border-color:var(--gold-deep)}
+@keyframes modalUp{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
+.modal-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 26px;border-bottom:1px solid rgba(212,175,55,.25);
+}
+.modal-head h3{font-family:var(--brush);font-size:26px;color:var(--gold-bright);letter-spacing:4px}
+.modal-close{background:none;border:none;color:var(--ink-dim);font-size:24px;cursor:pointer;transition:.3s}
+.modal-close:hover{color:var(--crimson-bright);transform:rotate(90deg)}
+.modal-body{padding:24px 26px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.single{grid-template-columns:1fr}
+.field label{display:block;font-size:12px;letter-spacing:2px;color:var(--ink-dim);margin-bottom:6px}
+.field input,.field select,.field textarea{
+  width:100%;background:rgba(212,175,55,.05);border:1px solid var(--panel-border);
+  color:var(--ink);padding:11px 13px;border-radius:6px;font-family:var(--serif);font-size:14px;
+  outline:none;transition:.3s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:var(--glow)}
+.field .err{font-size:12px;color:var(--crimson-bright);margin-top:4px;display:none}
+.field.invalid input{border-color:var(--crimson-bright)}
+.field.invalid .err{display:block}
+.modal-foot{display:flex;justify-content:flex-end;gap:12px;padding:0 26px 24px}
+@media(max-width:520px){.form-row{grid-template-columns:1fr}}
+/* 详情弹窗 */
+.detail-hero{text-align:center;padding:10px 0 18px;border-bottom:1px dashed rgba(212,175,55,.3)}
+.detail-hero .glyph-big{
+  width:84px;height:84px;margin:0 auto 14px;border-radius:18px;display:grid;place-items:center;
+  font-family:var(--brush);font-size:44px;color:#140f05;
+  background:linear-gradient(145deg,#f6d976,#c39b2c);box-shadow:0 10px 30px rgba(212,175,55,.4);
+}
+.detail-hero.depot .glyph-big{color:var(--gold-bright);background:linear-gradient(145deg,#e23c48,#6d0d14);box-shadow:0 10px 30px rgba(226,60,72,.4)}
+.detail-hero h4{font-family:var(--brush);font-size:32px;color:var(--gold-bright);letter-spacing:6px}
+.detail-hero p{font-size:13px;color:var(--ink-dim);letter-spacing:2px;margin-top:6px}
+.detail-info{padding:18px 0;line-height:2.1;font-size:14px;color:var(--ink)}
+.detail-info b{color:var(--gold)}
+.detail-list{margin-top:6px}
+.detail-list li{list-style:none;padding:10px 4px;border-bottom:1px dashed rgba(212,175,55,.15);display:flex;justify-content:space-between;font-size:13px}
+
+/* ============ 确认弹窗 / Toast ============ */
+.confirm-box{text-align:center}
+.confirm-box .warn-icon{font-size:44px;margin-bottom:10px}
+.confirm-box p{color:var(--ink-dim);line-height:2;margin-bottom:22px}
+.confirm-box p b{color:var(--gold-bright)}
+#toastBox{position:fixed;top:80px;right:24px;z-index:300;display:flex;flex-direction:column;gap:10px}
+.toast{
+  padding:13px 22px;border-radius:8px;font-size:14px;letter-spacing:1px;
+  background:linear-gradient(135deg,#1d1608,#120d05);border:1px solid var(--gold);
+  color:var(--gold-bright);box-shadow:var(--shadow),var(--glow);
+  animation:toastIn .4s cubic-bezier(.2,.9,.3,1.2);
+}
+.toast.warn{border-color:var(--crimson-bright);color:var(--crimson-bright)}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+.toast.out{opacity:0;transform:translateX(60px);transition:.4s}
+
+/* ============ 厂卫档案 ============ */
+.depots-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px}
+.depot-card{
+  position:relative;padding:34px 28px;border-radius:14px;overflow:hidden;
+  border:1px solid rgba(163,22,33,.5);
+  background:linear-gradient(160deg,rgba(50,10,14,.55),rgba(16,6,7,.8));
+  box-shadow:var(--shadow);
+}
+.depot-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 85% 15%,rgba(226,60,72,.16),transparent 50%);
+}
+.depot-card h4{font-family:var(--brush);font-size:30px;color:var(--crimson-bright);letter-spacing:6px;margin-bottom:4px}
+.depot-card .sub{font-size:11px;letter-spacing:3px;color:var(--ink-dim);margin-bottom:16px}
+.depot-card ul li{list-style:none;font-size:13.5px;line-height:2;color:var(--ink);padding-left:18px;position:relative}
+.depot-card ul li::before{content:'◆';position:absolute;left:0;color:var(--crimson-bright);font-size:10px;top:2px}
+.depot-card .quote{
+  margin-top:18px;padding:14px 16px;border-left:3px solid var(--crimson-bright);
+  background:rgba(226,60,72,.07);font-size:13px;color:var(--ink-dim);letter-spacing:1px;line-height:2;
+}
+
+/* ============ 迭代时间轴 ============ */
+.timeline{position:relative;max-width:860px;margin:0 auto;padding-left:36px}
+.timeline::before{content:'';position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--gold),rgba(212,175,55,.1))}
+.tl-item{position:relative;margin-bottom:34px}
+.tl-item::before{
+  content:'';position:absolute;left:-33px;top:8px;width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle,#f6d976 30%,#8a6d1f);box-shadow:0 0 14px rgba(212,175,55,.7);
+}
+.tl-item .tl-ver{font-size:12px;letter-spacing:2px;color:var(--crimson-bright);border:1px solid rgba(226,60,72,.4);padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.tl-item h5{font-size:17px;color:var(--gold-bright);letter-spacing:2px;margin-bottom:6px}
+.tl-item p{font-size:13.5px;color:var(--ink-dim);line-height:2}
+.tl-item .tl-date{font-size:11px;color:var(--ink-dim);opacity:.7}
+
+/* ============ 页脚 ============ */
+footer{
+  position:relative;z-index:2;text-align:center;padding:60px 6vw 40px;
+  border-top:1px solid rgba(212,175,55,.18);margin-top:60px;
+}
+footer .fu{font-family:var(--brush);font-size:26px;color:var(--gold);letter-spacing:8px;margin-bottom:12px}
+footer p{font-size:12px;color:var(--ink-dim);letter-spacing:2px;line-height:2.2}
+</style>
+</head>
+<body>
+<canvas id="goldCanvas"></canvas>
+<div class="vignette"></div>
+<div id="toastBox"></div>
+
+<!-- ================= 导航 ================= -->
+<nav>
+  <div class="brand">
+    <div class="seal">御</div>
+    <div>
+      <h1>大明中枢</h1>
+      <small>IMPERIAL COUNCIL · 官制管理平台</small>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#org">权力架构</a>
+    <a href="#board">中枢看板</a>
+    <a href="#roster">百官名册</a>
+    <a href="#depots">厂卫档案</a>
+    <a href="#changelog">版本迭代</a>
+    <span class="ver-badge" id="verBadge">v2.4 · 鼎定版</span>
+    <button class="theme-btn" id="themeBtn" title="切换昼夜两制">☀</button>
+  </div>
+</nav>
+
+<main>
+<!-- ================= 首屏 ================= -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">受命于天 · 既寿永昌</div>
+  <h1 class="hero-title">帝王中枢</h1>
+  <div class="hero-sub">君临天下 · 六部理政 · 厂卫监察 —— 一屏纵览天朝权力全景</div>
+  <svg class="hero-divider" viewBox="0 0 280 26">
+    <line x1="0" y1="13" x2="110" y2="13" stroke="#d4af37" stroke-width="1" opacity=".7"/>
+    <rect x="128" y="3" width="24" height="20" rx="3" fill="none" stroke="#d4af37" stroke-width="1.4"/>
+    <text x="140" y="18" text-anchor="middle" fill="#d4af37" font-size="12" font-family="serif">御</text>
+    <line x1="170" y1="13" x2="280" y2="13" stroke="#d4af37" stroke-width="1" opacity=".7"/>
+    <circle cx="115" cy="13" r="2.4" fill="#d4af37"/><circle cx="165" cy="13" r="2.4" fill="#d4af37"/>
+  </svg>
+  <div class="hero-ctas">
+    <a href="#org" class="btn btn-gold">入 朝 观 政</a>
+    <a href="#roster" class="btn btn-ghost">查 阅 名 册</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><b id="statTotal">0</b><span>在册官员</span></div>
+    <div class="hstat"><b>8</b><span>中枢机构</span></div>
+    <div class="hstat"><b>6</b><span>部院衙门</span></div>
+    <div class="hstat"><b>2</b><span>厂卫特署</span></div>
+  </div>
+  <div class="scroll-hint">▼ 向 下 探 索 权 力 之 源 ▼</div>
+</header>
+
+<!-- ================= 权力架构 ================= -->
+<section id="org">
+  <div class="sec-head reveal">
+    <div class="eyebrow">君 权 至 上</div>
+    <h2>权力架构 · 一尊八衡</h2>
+    <p>皇帝总揽朝纲，六部各司其职、分理天下政务；东厂西厂直属御前、缇骑四出、监察百官。点击任一机构，可查其职掌与现任主官。</p>
+  </div>
+
+  <div class="org-tree reveal">
+    <div class="emperor-node">
+      <div class="crown-rings">
+        <svg viewBox="0 0 120 120">
+          <g class="ring"><circle cx="60" cy="60" r="56" fill="none" stroke="#d4af37" stroke-width="1.6" stroke-dasharray="4 8" opacity=".8"/></g>
+          <g class="ring rev"><circle cx="60" cy="60" r="47" fill="none" stroke="#a31621" stroke-width="1.2" stroke-dasharray="14 6" opacity=".9"/></g>
+          <circle cx="60" cy="60" r="36" fill="rgba(212,175,55,.1)" stroke="#d4af37"/>
+          <text x="60" y="74" text-anchor="middle" font-size="34" fill="#f6d976" font-family="Ma Shan Zheng, serif">皇</text>
+        </svg>
+      </div>
+      <h3>当今圣上</h3>
+      <div class="era">御极四海 · 君临八方 · 年号「永昌」</div>
+      <div class="motto">「天子守国门，君王死社稷。六部奉而行之，厂卫察而纠之。」</div>
+    </div>
+    <div class="trunk"></div>
+    <div class="bus"></div>
+    <div class="branches" id="branchGrid"><!-- JS 渲染 --></div>
+  </div>
+</section>
+
+<!-- ================= 中枢看板 ================= -->
+<section id="board">
+  <div class="sec-head reveal">
+    <div class="eyebrow">运 筹 帷 幄</div>
+    <h2>中枢数据看板</h2>
+    <p>各部门在册官员实时统计，随名册增删改查自动刷新。点击色条可快速筛选该部门官员。</p>
+  </div>
+  <div class="board reveal">
+    <h3>—— 各署在册人数 · 实时 ——</h3>
+    <div class="bars" id="barsBox"></div>
+  </div>
+</section>
+
+<!-- ================= 百官名册 ================= -->
+<section id="roster">
+  <div class="sec-head reveal">
+    <div class="eyebrow">选 贤 任 能</div>
+    <h2>百官名册 · 增删改查</h2>
+    <p>支持新增、编辑、罢黜（删除）、关键词搜索、部门与状态筛选、多列排序、分页浏览；数据自动存于本地，可导出 JSON 存档或导入恢复。</p>
+  </div>
+
+  <div class="toolbar reveal">
+    <input type="text" class="search" id="searchInput" placeholder="🔎 搜索姓名 / 官职 / 部门…">
+    <select id="filterDept">
+      <option value="">全部部门</option>
+      <option>吏部</option><option>户部</option><option>礼部</option><option>兵部</option>
+      <option>刑部</option><option>工部</option><option>东厂</option><option>西厂</option>
+    </select>
+    <select id="filterStatus">
+      <option value="">全部状态</option>
+      <option>在任</option><option>致仕</option><option>罢黜</option>
+    </select>
+    <button class="btn-mini primary" id="btnAdd">＋ 新增官员</button>
+    <button class="btn-mini" id="btnExport">⬇ 导出存档</button>
+    <button class="btn-mini" id="btnImport">⬆ 导入恢复</button>
+    <button class="btn-mini danger" id="btnReset">⟲ 重置名册</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
+  </div>
+
+  <div class="table-wrap reveal">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="name">姓名 <span class="arrow"></span></th>
+          <th data-sort="title">官职 <span class="arrow"></span></th>
+          <th data-sort="dept">部门 <span class="arrow"></span></th>
+          <th data-sort="rank">品级 <span class="arrow"></span></th>
+          <th data-sort="merit">政绩 <span class="arrow"></span></th>
+          <th data-sort="status">状态 <span class="arrow"></span></th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="rosterBody"></tbody>
+    </table>
+    <div class="pager">
+      <span id="pagerInfo">—</span>
+      <div>
+        <button id="prevPage">‹ 上一页</button>
+        <button id="nextPage">下一页 ›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 厂卫档案 ================= -->
+<section id="depots">
+  <div class="sec-head reveal">
+    <div class="eyebrow">缇 骑 四 出</div>
+    <h2>厂卫档案 · 皇权之刃</h2>
+    <p>东厂西厂不属六部，直奏御前——以特务之制，行监察之权。此二署档案，慎入。</p>
+  </div>
+  <div class="depots-grid">
+    <div class="depot-card reveal">
+      <h4>东 厂</h4>
+      <div class="sub">EASTERN DEPOT · 永乐十八年设 · 提督太监秉笔</div>
+      <ul>
+        <li>全称「东缉事厂」，为史上第一个直属天子的特务衙门</li>
+        <li>缉访谋逆、妖言、大案要案，可不经三法司直接行事</li>
+        <li>掌印者称「厂公」或「督主」，位在锦衣卫之上</li>
+        <li>监察百官与民间，密报直达御前，缇骑侦缉天下</li>
+      </ul>
+      <div class="quote">「机密之事，东厂先知；百官之过，厂公上闻。」</div>
+    </div>
+    <div class="depot-card reveal">
+      <h4>西 厂</h4>
+      <div class="sub">WESTERN DEPOT · 成化十三年设 · 权势一时凌驾东厂</div>
+      <ul>
+        <li>全称「西缉事厂」，人员侦缉范围更广、权力更炽</li>
+        <li>短设数载而震动朝野，罢而复设，足见君权制衡之术</li>
+        <li>与东厂、锦衣卫互为掣肘，构成「厂卫」监察体系</li>
+        <li>问世仅短期，却成为明代厂卫政治的巅峰缩影</li>
+      </ul>
+      <div class="quote">「西厂横行，天下骚然——然其锋芒所向，皆奉君命。」</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 版本迭代 ================= -->
+<section id="changelog">
+  <div class="sec-head reveal">
+    <div class="eyebrow">精 益 求 精</div>
+    <h2>版本迭代志</h2>
+    <p>本平台长期维护、持续迭代，每一版皆为社稷之治更上一层。</p>
+  </div>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <span class="tl-ver">v2.4 · 鼎定版</span>
+      <div class="tl-date">当前版本</div>
+      <h5>新增导入导出与重置名册</h5>
+      <p>支持 JSON 存档导出/导入恢复，一键重置为初始名册；导出文件自动附时间戳，便于长期存档维护。</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-ver">v2.3</span>
+      <h5>新增中枢数据看板</h5>
+      <p>各部门在册人数实时可视化，点击色条即可联动名册快速筛选，看板随增删改查自动刷新。</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-ver">v2.0</span>
+      <h5>昼夜两制 · 主题切换</h5>
+      <p>新增「昼制（宣纸金卷）／夜制（玄殿鎏金）」双主题体系，主题偏好本地记忆。</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-ver">v1.5</span>
+      <h5>名册多列排序与分页</h5>
+      <p>支持姓名/官职/部门/品级/政绩/状态六列排序，分页浏览，状态徽章与政绩进度条可视化。</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-ver">v1.0</span>
+      <h5>开基立业 · 权力架构首屏</h5>
+      <p>鎏金粒子Canvas、帝王中枢架构图（六部+东厂西厂）、机构详情弹窗、金色流尘动效首发。</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= 机构详情弹窗 ================= -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="detailTitle">机构详情</h3>
+      <button class="modal-close" data-close="detailOverlay">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+  </div>
+</div>
+
+<!-- ================= 官员编辑弹窗 ================= -->
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="editTitle">新增官员</h3>
+      <button class="modal-close" data-close="editOverlay">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="field" id="fName">
+          <label>姓名 *</label>
+          <input type="text" id="inName" maxlength="12" placeholder="如：张居正">
+          <div class="err">请输入官员姓名</div>
+        </div>
+        <div class="field" id="fTitle">
+          <label>官职 *</label>
+          <input type="text" id="inTitle" maxlength="20" placeholder="如：内阁首辅">
+          <div class="err">请输入官职名称</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>所属部门</label>
+          <select id="inDept">
+            <option>吏部</option><option>户部</option><option>礼部</option><option>兵部</option>
+            <option>刑部</option><option>工部</option><option>东厂</option><option>西厂</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>品级</label>
+          <select id="inRank">
+            <option>正一品</option><option>从一品</option><option>正二品</option><option>从二品</option>
+            <option>正三品</option><option>从三品</option><option>正四品</option><option>从四品</option>
+            <option>正五品</option><option>从五品</option><option>正六品</option><option>从六品</option>
+            <option>正七品</option><option>从七品</option><option>正八品</option><option>从八品</option>
+            <option>正九品</option><option>从九品</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>状态</label>
+          <select id="inStatus">
+            <option>在任</option><option>致仕</option><option>罢黜</option>
+          </select>
+        </div>
+        <div class="field" id="fMerit">
+          <label>政绩评分（0–100）</label>
+          <input type="number" id="inMerit" min="0" max="100" value="80">
+          <div class="err">政绩评分须在 0–100 之间</div>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="field">
+          <label>备注 / 事迹</label>
+          <textarea id="inNote" rows="3" maxlength="120" placeholder="可记其政绩、轶事、考语……"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-mini" data-close="editOverlay">取 消</button>
+      <button class="btn-mini primary" id="btnSave">颁 印 存 档</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 确认弹窗 ================= -->
+<div class="overlay" id="confirmOverlay">
+  <div class="modal confirm-box">
+    <div class="modal-head" style="border:none;padding-bottom:0">
+      <h3 style="margin:auto;font-size:24px">圣 裁 确 认</h3>
+    </div>
+    <div class="modal-body">
+      <div class="warn-icon">⚠️</div>
+      <p id="confirmText">此操作不可撤销，是否继续？</p>
+      <div style="display:flex;justify-content:center;gap:14px">
+        <button class="btn-mini" data-close="confirmOverlay">再 想 想</button>
+        <button class="btn-mini danger" id="confirmYes">准 奏 执 行</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fu">大明中枢 · 天朝官制</div>
+  <p>
+    黑金帝王设计体系 · 鎏金粒子动效 · 全功能官制管理<br>
+    本页面为文化展示作品，官制内容参考明代史实进行艺术演绎 · 永久维护 · 持续迭代
+  </p>
+</footer>
+
+<script>
+/* ================================================================
+   大明中枢 · 前端核心 (vanilla JS, 无依赖, 数据本地持久化)
+================================================================ */
+
+/* ---------- 常量与默认数据 ---------- */
+const LS_KEY = 'imperial_council_v24';
+const PAGE_SIZE = 8;
+const DEPTS = [
+  {id:'libu', name:'吏部', en:'MINISTRY OF PERSONNEL', glyph:'吏',
+   desc:'掌天下文官铨叙、勋封、考课之政，为六部之首。',
+   detail:'文官任免、升迁考核、封赠袭荫，皆由吏部衡鉴，故称「天官」。'},
+  {id:'hubu', name:'户部', en:'MINISTRY OF REVENUE', glyph:'户',
+   desc:'掌天下田赋、户口、钱谷、盐税与国库出纳。',
+   detail:'天下钱粮户籍皆归户部调度，掌国用盈虚，号称「地官」。'},
+  {id:'libu2', name:'礼部', en:'MINISTRY OF RITES', glyph:'礼',
+   desc:'掌礼乐、祭祀、科举、朝贡与外交宴飨之仪。',
+   detail:'制礼作乐、开科取士、接待藩邦，国家体面尽在礼部，称「春官」。'},
+  {id:'bingbu', name:'兵部', en:'MINISTRY OF WAR', glyph:'兵',
+   desc:'掌武卫官军选授、兵籍、军械、边防与调遣之令。',
+   detail:'武官铨选、军令调发、武库蹄铁皆归兵部，称「夏官」。'},
+  {id:'xingbu', name:'刑部', en:'MINISTRY OF JUSTICE', glyph:'刑',
+   desc:'掌天下刑名、狱讼、按覆与恤刑之政。',
+   detail:'审定法律、复核大狱，与都察院、大理寺并称「三法司」，称「秋官」。'},
+  {id:'gongbu', name:'工部', en:'MINISTRY OF WORKS', glyph:'工',
+   desc:'掌天下营造、山泽、采捕、屯田与水利之政。',
+   detail:'宫室城池、桥道河渠、军资器仗悉由工部督造，称「冬官」。'},
+  {id:'dongchang', name:'东厂', en:'EASTERN DEPOT', glyph:'東', depot:true,
+   desc:'永乐十八年设。直属天子之特务衙门，缉访谋逆妖言，密报直达御前。',
+   detail:'提督太监秉笔，缇骑四出，权力在锦衣卫之上，为明代厂卫之中枢。'},
+  {id:'xichang', name:'西厂', en:'WESTERN DEPOT', glyph:'西', depot:true,
+   desc:'成化十三年设。侦缉范围更广、权势更炽，短设数载而震动朝野。',
+   detail:'与东厂互为掣肘，罢而复设，是皇权监察体系极致的缩影。'}
+];
+const DEFAULT_OFFICIALS = [
+  {id:1, name:'严守正', title:'吏部尚书', dept:'吏部', rank:'正一品', status:'在任', merit:92, note:'铨叙公平，朝野称颂。'},
+  {id:2, name:'钱通宝', title:'户部尚书', dept:'户部', rank:'正一品', status:'在任', merit:85, note:'善理财赋，国库充盈。'},
+  {id:3, name:'文华章', title:'礼部尚书', dept:'礼部', rank:'正一品', status:'在任', merit:78, note:'制礼作乐，宾服四夷。'},
+  {id:4, name:'霍振威', title:'兵部尚书', dept:'兵部', rank:'正一品', status:'在任', merit:95, note:'北御强虏，威震边关。'},
+  {id:5, name:'柳明法', title:'刑部尚书', dept:'刑部', rank:'正二品', status:'在任', merit:88, note:'执法如山，不避权贵。'},
+  {id:6, name:'鲁巧匠', title:'工部尚书', dept:'工部', rank:'正二品', status:'在任', merit:76, note:'督造宫城，巧夺天工。'},
+  {id:7, name:'冯保衡', title:'司礼监掌印', dept:'东厂', rank:'正二品', status:'在任', merit:60, note:'提督东厂，百官侧目。'},
+  {id:8, name:'汪直谏', title:'西厂提督', dept:'西厂', rank:'从二品', status:'在任', merit:55, note:'侦缉天下，权势一时无两。'},
+  {id:9, name:'海青天', title:'都察院右都御史', dept:'吏部', rank:'从一品', status:'在任', merit:99, note:'铁面无私，直谏敢言。'},
+  {id:10, name:'张江陵', title:'内阁首辅', dept:'吏部', rank:'正一品', status:'在任', merit:97, note:'一条鞭法，考成天下。'},
+  {id:11, name:'周廷玉', title:'礼部侍郎', dept:'礼部', rank:'正三品', status:'致仕', merit:70, note:'主持会试三科，门生遍天下。'},
+  {id:12, name:'马千里的', title:'兵部武选司郎中', dept:'兵部', rank:'正五品', status:'罢黜', merit:35, note:'边饷亏空案中被劾罢。'}
+];
+
+/* ---------- 状态 ---------- */
+let officials = load();
+let view = {search:'', dept:'', status:'', sortKey:'', sortDir:1, page:1};
+let editingId = null, pendingConfirm = null;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ const d = JSON.parse(raw); if(Array.isArray(d.officials)) return d.officials; }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_OFFICIALS));
+}
+function save(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({officials, savedAt:new Date().toISOString()})); }catch(e){}
+}
+
+/* ---------- 工具 ---------- */
+const $ = s => document.querySelector(s);
+const toastBox = $('#toastBox');
+function toast(msg, warn){
+  const t = document.createElement('div');
+  t.className = 'toast' + (warn?' warn':'');
+  t.textContent = msg;
+  toastBox.appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(), 450); }, 2600);
+}
+function openOverlay(id){ $('#'+id).classList.add('open'); }
+function closeOverlay(id){ $('#'+id).classList.remove('open'); }
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeOverlay(b.dataset.close)));
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open')); });
+
+function askConfirm(text, fn){
+  $('#confirmText').innerHTML = text;
+  pendingConfirm = fn;
+  openOverlay('confirmOverlay');
+}
+$('#confirmYes').addEventListener('click',()=>{
+  if(pendingConfirm) pendingConfirm();
+  pendingConfirm = null;
+  closeOverlay('confirmOverlay');
+});
+
+/* ---------- 机构卡片渲染 ---------- */
+function renderBranches(){
+  const grid = $('#branchGrid');
+  grid.innerHTML = DEPTS.map(d=>{
+    const n = officials.filter(o=>o.dept===d.name).length;
+    return `<div class="branch ${d.depot?'depot':''}" data-id="${d.id}" tabindex="0">
+      <div class="glyph">${d.glyph}</div>
+      <h4>${d.name}</h4>
+      <span class="en">${d.en}</span>
+      <p>${d.desc}</p>
+      <div class="foot">
+        <span class="count">在册 <b data-count="${d.name}">${n}</b> 员</span>
+        <span class="more">详情 ›</span>
+      </div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.branch').forEach(el=>{
+    const act = ()=>openDetail(el.dataset.id);
+    el.addEventListener('click', act);
+    el.addEventListener('keydown', e=>{ if(e.key==='Enter') act(); });
+  });
+}
+
+/* ---------- 详情弹窗 ---------- */
+function openDetail(id){
+  const d = DEPTS.find(x=>x.id===id);
+  const list = officials.filter(o=>o.dept===d.name && o.status==='在任');
+  $('#detailTitle').textContent = d.name + ' · 职掌档案';
+  $('#detailBody').innerHTML = `
+    <div class="detail-hero ${d.depot?'depot':''}">
+      <div class="glyph-big">${d.glyph}</div>
+      <h4>${d.name}</h4>
+      <p>${d.en}</p>
+    </div>
+    <div class="detail-info">
+      <p>${d.detail}</p>
+      <p style="margin-top:10px"><b>在任主官 · 共 ${list.length} 员</b></p>
+      <ul class="detail-list">
+        ${list.length ? list.map(o=>`<li><span style="color:var(--gold-bright)">${o.name}</span><span>${o.title} · ${o.rank}</span></li>`).join('')
+          : '<li style="justify-content:center;color:var(--ink-dim)">暂无在任官员 —— 可至「百官名册」增设</li>'}
+      </ul>
+    </div>`;
+  openOverlay('detailOverlay');
+}
+
+/* ---------- 看板 ---------- */
+function renderBoard(){
+  const max = Math.max(1, ...DEPTS.map(d=>officials.filter(o=>o.dept===d.name).length));
+  $('#barsBox').innerHTML = DEPTS.map(d=>{
+    const n = officials.filter(o=>o.dept===d.name).length;
+    return `<div class="bar-item ${d.depot?'depot':''}" data-dept="${d.name}" title="点击筛选 ${d.name}">
+      <div class="bar-label"><span>${d.name}</span><b>${n}</b></div>
+      <div class="bar-track"><div class="bar-fill" style="width:0"></div></div>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(()=>{
+    document.querySelectorAll('.bar-fill').forEach(f=>f.style.width='0%');
+    setTimeout(()=>{
+      document.querySelectorAll('.bar-item').forEach(item=>{
+        const d = DEPTS.find(x=>x.name===item.dataset.dept);
+        const n = officials.filter(o=>o.dept===d.name).length;
+        item.querySelector('.bar-fill').style.width = Math.round(n/max*100)+'%';
+        item.onclick = ()=>{
+          $('#filterDept').value = d.name;
+          view.dept = d.name; view.page = 1;
+          renderRoster();
+          document.getElementById('roster').scrollIntoView({behavior:'smooth'});
+          toast('已筛选：' + d.name);
+        };
+      });
+    },60);
+  });
+}
+
+/* ---------- 名册：过滤 / 排序 / 分页 ---------- */
+function filtered(){
+  let arr = [...officials];
+  const kw = view.search.trim().toLowerCase();
+  if(kw) arr = arr.filter(o=>[o.name,o.title,o.dept,o.rank,o.note].some(v=>(v||'').toLowerCase().includes(kw)));
+  if(view.dept) arr = arr.filter(o=>o.dept===view.dept);
+  if(view.status) arr = arr.filter(o=>o.status===view.status);
+  if(view.sortKey){
+    const k = view.sortKey;
+    arr.sort((a,b)=>{
+      let va=a[k], vb=b[k];
+      if(k==='rank') return view.sortDir * (a.rank.localeCompare(b.rank,'zh'));
+      if(k==='merit') return view.sortDir * ((+va||0)-(+vb||0));
+      return view.sortDir * String(va||'').localeCompare(String(vb||''),'zh');
+    });
+  }
+  return arr;
+}
+function statusTag(s){
+  const cls = s==='在任'?'on':(s==='致仕'?'off':'bad');
+  return `<span class="tag ${cls}">${s}</span>`;
+}
+const RANK_ORDER = ['正一品','从一品','正二品','从二品','正三品','从三品','正四品','从四品','正五品','从五品','正六品','从六品','正七品','从七品','正八品','从八品','正九品','从九品'];
+
+function renderRoster(){
+  const all = filtered();
+  const pages = Math.max(1, Math.ceil(all.length/PAGE_SIZE));
+  if(view.page>pages) view.page = pages;
+  const start = (view.page-1)*PAGE_SIZE;
+  const rows = all.slice(start, start+PAGE_SIZE);
+  const isDepot = d => d==='东厂'||d==='西厂';
+  $('#rosterBody').innerHTML = rows.length ? rows.map(o=>{
+    const depIdx = RANK_ORDER.indexOf(o.rank);
+    return `<tr class="${isDepot(o.dept)?'td-depot':''}" data-id="${o.id}">
+      <td class="td-name">${o.name}</td>
+      <td>${o.title}</td>
+      <td class="dept-chip">${isDepot(o.dept)?'◆ ':''}${o.dept}</td>
+      <td>${o.rank}</td>
+      <td><span class="merit-bar"><i style="width:${o.merit}%"></i></span>${o.merit}</td>
+      <td>${statusTag(o.status)}</td>
+      <td><div class="act-btns">
+        <button class="edit">改</button>
+        <button class="del">罢</button>
+      </div></td>
+    </tr>`;
+  }).join('') : `<tr class="empty-row"><td colspan="7">名册空空如也 · 请「新增官员」或调整筛选条件</td></tr>`;
+
+  $('#pagerInfo').textContent = `共 ${all.length} 员 · 第 ${view.page} / ${pages} 页`;
+  $('#prevPage').disabled = view.page<=1;
+  $('#nextPage').disabled = view.page>=pages;
+  updateSortArrows();
+  refreshCounts();
+}
+
+/* 行内操作（事件委托） */
+$('#rosterBody').addEventListener('click', e=>{
+  const tr = e.target.closest('tr[data-id]');
+  if(!tr) return;
+  const id = +tr.dataset.id;
+  if(e.target.classList.contains('edit')) return openEdit(id);
+  if(e.target.classList.contains('del')){
+    const o = officials.find(x=>x.id===id);
+    askConfirm(`将 <b>${o.name}（${o.title}）</b> 从名册中罢黜除名？<br>此操作不可撤销。`, ()=>{
+      tr.classList.add('fading');
+      setTimeout(()=>{
+        officials = officials.filter(x=>x.id!==id);
+        save(); renderAll();
+        toast(`已罢黜：${o.name}`, true);
+      }, 380);
+    });
+  }
+});
+
+/* ---------- 排序 ---------- */
+document.querySelectorAll('th[data-sort]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k = th.dataset.sort;
+    if(view.sortKey===k) view.sortDir *= -1;
+    else { view.sortKey = k; view.sortDir = 1; }
+    renderRoster();
+  });
+});
+function updateSortArrows(){
+  document.querySelectorAll('th[data-sort] .arrow').forEach(a=>a.textContent='');
+  if(view.sortKey){
+    const th = document.querySelector(`th[data-sort="${view.sortKey}"] .arrow`);
+    if(th) th.textContent = view.sortDir>0 ? '▲' : '▼';
+  }
+}
+
+/* ---------- 筛选与搜索 ---------- */
+$('#searchInput').addEventListener('input', e=>{ view.search=e.target.value; view.page=1; renderRoster(); });
+$('#filterDept').addEventListener('change', e=>{ view.dept=e.target.value; view.page=1; renderRoster(); });
+$('#filterStatus').addEventListener('change', e=>{ view.status=e.target.value; view.page=1; renderRoster(); });
+$('#prevPage').addEventListener('click',()=>{ if(view.page>1){view.page--; renderRoster();} });
+$('#nextPage').addEventListener('click',()=>{ view.page++; renderRoster(); });
+
+/* ---------- 新增 / 编辑 ---------- */
+function openEdit(id){
+  editingId = id ?? null;
+  const o = id ? officials.find(x=>x.id===id) : null;
+  $('#editTitle').textContent = o ? '改 · 官员考语' : '新增官员';
+  $('#inName').value = o?o.name:''; $('#inTitle').value = o?o.title:'';
+  $('#inDept').value = o?o.dept:'吏部'; $('#inRank').value = o?o.rank:'正五品';
+  $('#inStatus').value = o?o.status:'在任'; $('#inMerit').value = o?o.merit:80;
+  $('#inNote').value = o?(o.note||''):'';
+  ['fName','fTitle','fMerit'].forEach(f=>$('#'+f).classList.remove('invalid'));
+  openOverlay('editOverlay');
+  setTimeout(()=>$('#inName').focus(), 200);
+}
+$('#btnAdd').addEventListener('click', ()=>openEdit(null));
+
+$('#btnSave').addEventListener('click', ()=>{
+  const name = $('#inName').value.trim();
+  const title = $('#inTitle').value.trim();
+  const merit = +$('#inMerit').value;
+  let ok = true;
+  $('#fName').classList.toggle('invalid', !name); if(!name) ok=false;
+  $('#fTitle').classList.toggle('invalid', !title); if(!title) ok=false;
+  const meritBad = !(merit>=0 && merit<=100 && $('#inMerit').value!=='');
+  $('#fMerit').classList.toggle('invalid', meritBad); if(meritBad) ok=false;
+  if(!ok){ toast('表单有误 · 请检查红框之项', true); return; }
+
+  const dup = officials.find(o=>o.name===name && o.id!==editingId);
+  if(dup){ toast(`名册中已有同名官员「${name}」`, true); return; }
+
+  const data = {name, title, dept:$('#inDept').value, rank:$('#inRank').value,
+                status:$('#inStatus').value, merit, note:$('#inNote').value.trim()};
+  if(editingId){
+    Object.assign(officials.find(o=>o.id===editingId), data);
+    toast(`已改档：${name}`);
+  }else{
+    data.id = officials.reduce((m,o)=>Math.max(m,o.id),0)+1;
+    officials.push(data);
+    toast(`已授职：${name} · ${title}`);
+  }
+  save(); closeOverlay('editOverlay'); renderAll();
+});
+
+/* ---------- 删除 / 重置 / 导入导出 ---------- */
+$('#btnReset').addEventListener('click', ()=>{
+  askConfirm('将<b>整个名册</b>重置回初始十二员？当前所有改动将被清空。', ()=>{
+    officials = JSON.parse(JSON.stringify(DEFAULT_OFFICIALS));
+    save(); renderAll(); toast('名册已重置为初始版');
+  });
+});
+$('#btnExport').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify({officials, exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `大明中枢名册_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('存档已导出 · 请妥善保管');
+});
+$('#btnImport').addEventListener('click', ()=>$('#importFile').click());
+$('#importFile').addEventListener('change', e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    try{
+      const d = JSON.parse(rd.result);
+      if(!Array.isArray(d.officials)) throw 0;
+      askConfirm(`检测到存档含 <b>${d.officials.length}</b> 员，<b>覆盖</b>当前名册？`, ()=>{
+        officials = d.officials.map((o,i)=>({id:o.id??(i+1), name:String(o.name||'无名'), title:String(o.title||'未授'),
+          dept:DEPTS.some(x=>x.name===o.dept)?o.dept:'吏部', rank:RANK_ORDER.includes(o.rank)?o.rank:'从九品',
+          status:['在任','致仕','罢黜'].includes(o.status)?o.status:'在任',
+          merit:Math.min(100,Math.max(0,+o.merit||0)), note:String(o.note||'')}));
+        save(); renderAll(); toast('存档已导入 · 名册已恢复');
+      });
+    }catch(err){ toast('存档格式无效 · 导入失败', true); }
+    e.target.value='';
+  };
+  rd.readAsText(file);
+});
+
+/* ---------- 顶部统计与徽章 ---------- */
+function refreshCounts(){
+  DEPTS.forEach(d=>{
+    document.querySelectorAll(`[data-count="${d.name}"]`).forEach(el=>el.textContent = officials.filter(o=>o.dept===d.name).length);
+  });
+  $('#statTotal').textContent = officials.length;
+}
+function renderAll(){ renderBranches(); renderBoard(); renderRoster(); }
+
+/* ---------- 主题切换 ---------- */
+const themeBtn = $('#themeBtn');
+function applyTheme(t){
+  document.body.classList.toggle('light', t==='light');
+  themeBtn.textContent = t==='light' ? '☾' : '☀';
+  try{ localStorage.setItem('ic_theme', t); }catch(e){}
+}
+themeBtn.addEventListener('click', ()=>{
+  applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+});
+try{ applyTheme(localStorage.getItem('ic_theme') || 'dark'); }catch(e){ applyTheme('dark'); }
+
+/* ---------- 滚动渐显 ---------- */
+const io = new IntersectionObserver(es=>es.forEach(en=>{
+  if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---------- 鎏金粒子 Canvas ---------- */
+(function(){
+  const cv = document.getElementById('goldCanvas'), ctx = cv.getContext('2d');
+  let W,H,ps=[];
+  function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight; }
+  addEventListener('resize', resize); resize();
+  const N = Math.min(90, innerWidth/14|0);
+  for(let i=0;i<N;i++) ps.push(mk());
+  function mk(){ return {x:Math.random()*W, y:Math.random()*H, r:.6+Math.random()*1.9,
+    vx:(Math.random()-.5)*.28, vy:-.12-Math.random()*.4, a:.15+Math.random()*.5, tw:Math.random()*Math.PI*2}; }
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    const light = document.body.classList.contains('light');
+    for(const p of ps){
+      p.x+=p.vx; p.y+=p.vy; p.tw+=.03;
+      if(p.y<-10||p.x<-10||p.x>W+10) Object.assign(p, mk(), {y:H+8});
+      const alpha = p.a*(0.65+0.35*Math.sin(p.tw));
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7);
+      ctx.fillStyle = light ? `rgba(150,110,30,${alpha})` : `rgba(230,190,90,${alpha})`;
+      ctx.shadowColor = 'rgba(212,175,55,.8)'; ctx.shadowBlur = 6;
+      ctx.fill(); ctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ---------- 启动 ---------- */
+renderAll();
+console.log('%c大明中枢 v2.4 %c已就绪 · 永久维护 · 持续迭代','background:#d4af37;color:#140f05;padding:2px 8px;border-radius:3px','color:#d4af37');
+</script>
+</body>
+</html>
